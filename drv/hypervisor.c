@@ -29,7 +29,7 @@ static bool DetectVMXSupport(void)
 	CpuidRegs cpuid;
 	bool result;
 
-	HVCpuid(1, &cpuid);
+	PlatformCpuid(1, &cpuid);
 
 	// VMX support is CPUID.1:ECX.VMX[bit 5]
 	result = ((cpuid.rcx & (1 << 5)) != 0);

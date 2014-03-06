@@ -30,8 +30,9 @@ typedef struct CpuidRegs
 	uint64_t rbx;
 } CpuidRegs;
 
-uint64_t HVReadCR0(void);
-uint64_t HVReadCR4(void);
-void HVCpuid(uint64_t leaf, CpuidRegs* const cpuid);
+void PlatformPrint(const char* msg);
+uint64_t PlatformReadCR0(void);
+uint64_t PlatformReadCR4(void);
+void PlatformCpuid(uint64_t leaf, CpuidRegs* const cpuid);
 
 #endif /* __PLATFORM_H__ */

@@ -23,6 +23,8 @@
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/types.h>
+#include <linux/fs.h>
+#include <linux/miscdevice.h>
 
 #include "platform.h"
 #include "hypervisor.h"
@@ -31,7 +33,14 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_AUTHOR("Ryan Salsamendi <rsalsamendi@hotmail.com>");
 MODULE_DESCRIPTION("A simple hypervisor");
 
-uint64_t HVReadCR0(void)
+#define HYPERVISOR_MINOR	1
+
+void PlatformPrint(const char* msg)
+{
+	printk(KERN_WARNING "hypervisor: %s\n", msg);
+}
+
+uint64_t PlatformReadCR0(void)
 {
 	uint64_t cr0;
 
@@ -46,7 +55,7 @@ uint64_t HVReadCR0(void)
 	return cr0;
 }
 
-uint64_t HVReadCR4(void)
+uint64_t PlatformReadCR4(void)
 {
 	uint64_t cr4;
 
@@ -61,7 +70,7 @@ uint64_t HVReadCR4(void)
 	return cr4;
 }
 
-void HVCpuid(uint64_t leaf, CpuidRegs* const cpuid)
+void PlatformCpuid(uint64_t leaf, CpuidRegs* const cpuid)
 {
 	__asm__ __volatile__
 	(
@@ -73,7 +82,7 @@ void HVCpuid(uint64_t leaf, CpuidRegs* const cpuid)
 	);
 }
 
-static int __init HVInitModule(void)
+static int __init hypervisor_init_module(void)
 {
 	printk(KERN_INFO "hypervisor driver loaded\n");
 
@@ -83,10 +92,44 @@ static int __init HVInitModule(void)
 	return 0;
 }
 
-static void __exit HVCleanupModule(void)
+static void __exit hypervisor_exit_module(void)
 {
 	printk(KERN_INFO "hypervisor driver unloaded\n");
 }
 
-module_init(HVInitModule);
-module_exit(HVCleanupModule);
+module_init(hypervisor_init_module);
+module_exit(hypervisor_exit_module);
+
+static long hypervisor_ioctl(struct file* filp, unsigned int ioctl, unsigned long arg)
+{
+	return 0;
+}
+
+static int hypervisor_open(struct inode* inodep, struct file* filep)
+{
+	return 0;
+}
+
+static int hypervisor_release(struct inode* inodep, struct file* filep)
+{
+	return 0;
+}
+
+static const struct file_operations hypervisor_device_ops =
+{
+	// .owner =  ?
+	.unlocked_ioctl = hypervisor_ioctl,
+#ifdef CONFIG_COMPAT
+	.compat_ioctl = hypervisor_ioctl,
+#endif /* CONFIG_COMPAT */
+	.open = hypervisor_open,
+	.release = hypervisor_release
+};
+
+static const struct miscdevice hypervisor_device =
+{
+	HYPERVISOR_MINOR,
+	"hypervisor",
+	&hypervisor_device_ops
+};
+
