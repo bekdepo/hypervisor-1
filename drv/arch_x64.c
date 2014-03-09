@@ -31,11 +31,9 @@ uint64_t ArchReadMsr(uint32_t msr)
 	(
 		"rdmsr"
 		: "=A" (value)
-		: "c"
+		: "c" (msr)
 		:
 	);
-
-	value = ((uint64_t)rdx << 32) | rax;
 
 	return value;
 }
