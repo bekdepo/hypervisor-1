@@ -40,7 +40,7 @@ uint64_t ArchReadMsr(uint32_t msr)
 
 void ArchWriteMsr(uint32_t msr, uint64_t value)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"wrmsr"
 		:
@@ -111,7 +111,7 @@ uint64_t ArchReadCr4(void)
 
 void ArchWriteCr0(uint64_t cr0)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%cr0"
 		:
@@ -122,7 +122,7 @@ void ArchWriteCr0(uint64_t cr0)
 		
 void ArchWriteCr2(uint64_t cr2)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%cr2"
 		:
@@ -133,7 +133,7 @@ void ArchWriteCr2(uint64_t cr2)
 	
 void ArchWriteCr3(uint64_t cr3)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%cr3"
 		:
@@ -144,7 +144,7 @@ void ArchWriteCr3(uint64_t cr3)
 	
 void ArchWriteCr4(uint64_t cr4)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%cr4"
 		:
@@ -245,7 +245,7 @@ uint64_t ArchReadDr7(void)
 
 void ArchWriteDr0(uint64_t dr0)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%dr0"
 		:
@@ -256,7 +256,7 @@ void ArchWriteDr0(uint64_t dr0)
 
 void ArchWriteDr1(uint64_t dr1)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%dr1"
 		:
@@ -267,7 +267,7 @@ void ArchWriteDr1(uint64_t dr1)
 
 void ArchWriteDr2(uint64_t dr2)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%dr2"
 		:
@@ -278,7 +278,7 @@ void ArchWriteDr2(uint64_t dr2)
 
 void ArchWriteDr3(uint64_t dr3)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%dr3"
 		:
@@ -289,7 +289,7 @@ void ArchWriteDr3(uint64_t dr3)
 
 void ArchWriteDr6(uint64_t dr6)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%dr6"
 		:
@@ -300,7 +300,7 @@ void ArchWriteDr6(uint64_t dr6)
 
 void ArchWriteDr7(uint64_t dr7)
 {
-	__asm__
+	__asm__ __volatile__
 	(
 		"movq %0, %%dr7"
 		:
