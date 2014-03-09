@@ -22,17 +22,6 @@
 #ifndef __PLATFORM_H__
 #define __PLATFORM_H__
 
-typedef struct CpuidRegs
-{
-	uint64_t rax;
-	uint64_t rcx;
-	uint64_t rdx;
-	uint64_t rbx;
-} CpuidRegs;
-
 void PlatformPrint(const char* msg);
-uint64_t PlatformReadCR0(void);
-uint64_t PlatformReadCR4(void);
-void PlatformCpuid(uint64_t leaf, CpuidRegs* const cpuid);
 
 #endif /* __PLATFORM_H__ */

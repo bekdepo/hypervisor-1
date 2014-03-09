@@ -19,37 +19,45 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE.
 */
-#include <linux/types.h>
+#ifndef __ARCH_H__
+#define __ARCH_H__
 
-#include "arch.h"
-#include "platform.h"
-
-
-static bool DetectVMXSupport(void)
+typedef struct CpuidRegs
 {
-	CpuidRegs cpuid;
-	bool result;
+	uint64_t rax;
+	uint64_t rcx;
+	uint64_t rdx;
+	uint64_t rbx;
+} CpuidRegs;
 
-	ArchCpuid(1, &cpuid);
+uint64_t ArchReadMsr(uint32_t msr);
+void ArchWriteMsr(uint32_t msr, uint64_t value);
 
-	// VMX support is CPUID.1:ECX.VMX[bit 5]
-	result = ((cpuid.rcx & (1 << 5)) != 0);
+uint64_t ArchReadCr0(void);
+uint64_t ArchReadCr2(void);
+uint64_t ArchReadCr3(void);
+uint64_t ArchReadCr4(void);
 
-	return result;
-}
+void ArchWriteCr0(uint64_t cr0);
+void ArchWriteCr2(uint64_t cr2);
+void ArchWriteCr3(uint64_t cr3);
+void ArchWriteCr4(uint64_t cr4);
 
-static bool IsVmxDisabledByBios(void)
-{
-	return false;
-}
+uint64_t ArchReadDr0(void);
+uint64_t ArchReadDr1(void);
+uint64_t ArchReadDr2(void);
+uint64_t ArchReadDr3(void);
+uint64_t ArchReadDr6(void);
+uint64_t ArchReadDr7(void);
 
-bool HVInit(void)
-{
-	if (!DetectVMXSupport())
-		return false;
+void ArchWriteDr0(uint64_t dr0);
+void ArchWriteDr1(uint64_t dr1);
+void ArchWriteDr2(uint64_t dr2);
+void ArchWriteDr3(uint64_t dr3);
+void ArchWriteDr6(uint64_t dr6);
+void ArchWriteDr7(uint64_t dr7);
 
-	if (IsVmxDisabledByBios())
-		return false;
+void ArchCpuid(uint64_t leaf, CpuidRegs* const cpuid);
 
-	return true;
-}
+
+#endif /* __ARCH_H__ */

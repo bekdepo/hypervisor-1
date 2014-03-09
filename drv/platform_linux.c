@@ -40,48 +40,6 @@ void PlatformPrint(const char* msg)
 	printk(KERN_WARNING "hypervisor: %s\n", msg);
 }
 
-uint64_t PlatformReadCR0(void)
-{
-	uint64_t cr0;
-
-	__asm__ __volatile__
-	(
-		"movq %%cr0, %%rax\r\n"
-		: "=a" (cr0)
-		:
-		:
-	);
-
-	return cr0;
-}
-
-uint64_t PlatformReadCR4(void)
-{
-	uint64_t cr4;
-
-	__asm__ __volatile__
-	(
-		"movq %%cr4, %%rax\r\n"
-		: "=a" (cr4)
-		:
-		:
-	);
-
-	return cr4;
-}
-
-void PlatformCpuid(uint64_t leaf, CpuidRegs* const cpuid)
-{
-	__asm__ __volatile__
-	(
-		"cpuid\r\n"
-		: "=a" (cpuid->rax), "=c" (cpuid->rcx),
-		  "=d" (cpuid->rdx), "=b" (cpuid->rbx)
-		: "a" (leaf)
-		:
-	);
-}
-
 static int __init hypervisor_init_module(void)
 {
 	printk(KERN_INFO "hypervisor driver loaded\n");
