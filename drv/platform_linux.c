@@ -24,6 +24,7 @@
 #include <linux/init.h>
 #include <linux/types.h>
 #include <linux/fs.h>
+#include <linux/smp.h>
 #include <linux/miscdevice.h>
 
 #include "platform.h"
@@ -35,6 +36,36 @@ MODULE_DESCRIPTION("A simple hypervisor");
 
 #define HYPERVISOR_MINOR	1
 
+bool PlatformRunOnAllCpus(PlatformOnAllCpusFunc func, void* data)
+{
+	int cpu;
+	for_each_online_cpu(cpu)
+		if (!func(data))
+			return false;
+	return true;
+}
+
+uint32_t PlatformGetCpuCount(void)
+{
+	uint32_t cpuCount;
+	int cpu;
+
+	cpuCount = 0;
+	for_each_online_cpu(cpu)
+		cpuCount++;
+	return cpuCount;
+}
+
+void PlatformDisableSchedulerInterrupts(void)
+{
+	get_cpu();
+}
+
+void PlatformEnableSchedulerInterrupts(void)
+{
+	put_cpu();
+}
+
 void PlatformPrint(const char* msg)
 {
 	printk(KERN_WARNING "hypervisor: %s\n", msg);
@@ -42,17 +73,14 @@ void PlatformPrint(const char* msg)
 
 static int __init hypervisor_init_module(void)
 {
-	printk(KERN_INFO "hypervisor driver loaded\n");
-
-	if (!HVInit())
-		printk(KERN_INFO "vmx not supported\n");
-
+	if (!HypervisorInit())
+		return -1;
 	return 0;
 }
 
 static void __exit hypervisor_exit_module(void)
 {
-	printk(KERN_INFO "hypervisor driver unloaded\n");
+	HypervisorCleanup();
 }
 
 module_init(hypervisor_init_module);

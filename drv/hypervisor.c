@@ -23,33 +23,20 @@
 
 #include "arch.h"
 #include "platform.h"
+#include "vmx.h"
 
 
-static bool DetectVMXSupport(void)
+bool HypervisorInit(void)
 {
-	CpuidRegs cpuid;
-	bool result;
+	PlatformPrint("Hypervisor loaded.");
 
-	ArchCpuid(1, &cpuid);
-
-	// VMX support is CPUID.1:ECX.VMX[bit 5]
-	result = ((cpuid.rcx & (1 << 5)) != 0);
-
-	return result;
-}
-
-static bool IsVmxDisabledByBios(void)
-{
-	return false;
-}
-
-bool HVInit(void)
-{
-	if (!DetectVMXSupport())
-		return false;
-
-	if (IsVmxDisabledByBios())
+	if (!DetectVmxSupport())
 		return false;
 
 	return true;
+}
+
+void HypervisorCleanup(void)
+{
+	PlatformPrint("Hypervisor unloaded.");
 }

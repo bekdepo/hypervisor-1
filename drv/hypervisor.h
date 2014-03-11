@@ -22,6 +22,7 @@
 #ifndef __HYPERVISOR_H__
 #define __HYPERVISOR_H__
 
-bool HVInit(void);
+bool HypervisorInit(void);
+void HypervisorCleanup(void);
 
 #endif /* __HYPERVISOR_H__ */

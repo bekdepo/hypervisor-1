@@ -314,8 +314,8 @@ void ArchCpuid(uint64_t leaf, CpuidRegs* const cpuid)
 	__asm__
 	(
 		"cpuid"
-		: "=a" (cpuid->rax), "=c" (cpuid->rcx),
-		  "=d" (cpuid->rdx), "=b" (cpuid->rbx)
+		: "=a" (cpuid->eax), "=c" (cpuid->ecx),
+		  "=d" (cpuid->edx), "=b" (cpuid->ebx)
 		: "a" (leaf)
 		:
 	);

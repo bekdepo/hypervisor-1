@@ -22,6 +22,18 @@
 #ifndef __PLATFORM_H__
 #define __PLATFORM_H__
 
+#ifdef __linux__
+#include <linux/types.h>
+#endif /* __linux__ */
+
+typedef bool (*PlatformOnAllCpusFunc)(void* data);
+
+bool PlatformRunOnAllCpus(PlatformOnAllCpusFunc func, void* data);
+uint32_t PlatformGetCpuCount(void);
+
+void PlatformDisableSchedulerInterrupts(void);
+void PlatformEnableSchedulerInterrupts(void);
+
 void PlatformPrint(const char* msg);
 
 #endif /* __PLATFORM_H__ */

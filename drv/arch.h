@@ -24,11 +24,35 @@
 
 typedef struct CpuidRegs
 {
-	uint64_t rax;
-	uint64_t rcx;
-	uint64_t rdx;
-	uint64_t rbx;
+	uint32_t eax;
+	uint32_t ecx;
+	uint32_t edx;
+	uint32_t ebx;
 } CpuidRegs;
+
+typedef enum MachineSpecificRegister
+{
+	IA32_FEATURE_CTL = 0x3a,
+
+	IA32_VMX_BASIC = 0x480,
+	IA32_VMX_PINBASED_CTLS = 0x481,
+	IA32_VMX_PROCBASED_CTLS = 0x482,
+	IA32_VMX_EXIT_CTLS = 0x483,
+	IA32_VMX_ENTRY_CTLS = 0x484,
+	IA32_VMX_MISC = 0x485,
+	IA32_VMX_CR0_FIXED0 = 0x486,
+	IA32_VMX_CR0_FIXED1 = 0x487,
+	IA32_VMX_CR4_FIXED0 = 0x488,
+	IA32_VMX_CR4_FIXED1 = 0x489,
+	IA32_VMX_VMCS_ENUM = 0x48a,
+	IA32_VMX_PROCBASED_CTLS2 = 0x48b,
+	IA32_VMX_EPT_VPID_CAP	 = 0x48c,
+	IA32_VMX_TRUE_PINBASED_CTLS = 0x48d,
+	IA32_VMX_TRUE_PROCBASED_CTLS = 0x48e,
+	IA32_VMX_TRUE_EXIT_CTLS	 = 0x48f,
+	IA32_VMX_TRUE_ENTRY_CTLS = 0x490,
+	IA32_VMX_VMFUNC = 0x491
+} MachineSpecificRegister;
 
 uint64_t ArchReadMsr(uint32_t msr);
 void ArchWriteMsr(uint32_t msr, uint64_t value);
