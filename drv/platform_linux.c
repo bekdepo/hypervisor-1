@@ -36,11 +36,30 @@ MODULE_DESCRIPTION("A simple hypervisor");
 
 #define HYPERVISOR_MINOR	1
 
+typedef struct RunOnAllCpusCtxt
+{
+	PlatformOnAllCpusFunc func;
+	void* data;
+	bool result;
+} RunOnAllCpusCtxt;
+
+static void RunOnAllCpusWorker(void* data)
+{
+	RunOnAllCpusCtxt* const cpuCtxt = (RunOnAllCpusCtxt*)data;
+	cpuCtxt->result = cpuCtxt->func(cpuCtxt->data);
+}
+
 bool PlatformRunOnAllCpus(PlatformOnAllCpusFunc func, void* data)
 {
 	int cpu;
+	RunOnAllCpusCtxt cpuCtxt;
+
+	cpuCtxt.func = func;
+	cpuCtxt.data = data;
 	for_each_online_cpu(cpu)
-		if (!func(data))
+		cpuCtxt.result = false;
+		smp_call_function_single(cpu, RunOnAllCpusWorker, &cpuCtxt, 1);
+		if (!cpuCtxt.result)
 			return false;
 	return true;
 }
